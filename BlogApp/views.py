@@ -10,7 +10,7 @@ from django.conf import settings
 from rest_framework.permissions import IsAdminUser,IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.exceptions import PermissionDenied
-
+from django.template.loader import get_template
 #Normal user signup
 class Signup(APIView):
     
@@ -20,10 +20,12 @@ class Signup(APIView):
       user=serializer.save()
 
       subject='WELCOME TO BLOG PLATFORM'
-      message=f"Helloo {user.username} ,\n ThankYou for registering .Your account is succesfully created "
       from_email=settings.DEFAULT_FROM_EMAIL
       receiptant_list=[user.email]
+      ctx={'username':user.username}
+      message=get_template('email.html').render(ctx)
       email=EmailMessage(subject,message,from_email,receiptant_list)
+      email.content_subtype="html"
       email.send()
             
                 

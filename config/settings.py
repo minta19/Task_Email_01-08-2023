@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-#-zw3)q0u*vj6%3e%^s2602f*ql$n4!5w(txl-k-5g3&e!pkc*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['mintajose.pythonanywhere.com', 'www.mintajose.pythonanywhere.com']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -60,7 +60,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
