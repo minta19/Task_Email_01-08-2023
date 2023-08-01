@@ -51,7 +51,24 @@ class BlogCreate(generics.CreateAPIView):
   serializer_class=BlogCreateSerializer
 
   def perform_create(self, serializer):
-    serializer.save(createdby=self.request.user)
+    user=self.request.user
+    serializer.save(createdby=user)
+
+    if serializer.is_valid():
+
+      subject='YOUR BLOG CREATED'
+      from_email=settings.DEFAULT_FROM_EMAIL
+      receiptant_list=[user.email]
+      ctx={'username':user.username,'title': serializer.data['title'],'new_blog':serializer.instance}
+      message=get_template('blogemail.html').render(ctx)
+
+      new_blog=serializer.instance
+      email=EmailMessage(subject,message,from_email,receiptant_list)
+      if new_blog.blog_image:
+        email.attach(new_blog.blog_image.name,new_blog.blog_image.read(),('image/*'))
+      email.content_subtype="html"
+      email.send()
+            
   
   def post(self, request, *args, **kwargs):
     response= super().post(request, *args, **kwargs)
